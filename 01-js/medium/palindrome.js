@@ -4,7 +4,21 @@
 */
 
 function isPalindrome(str) {
-  return true;
+  str = str.replaceAll(",","")
+  str = str.replaceAll("!","")
+  str = str.replaceAll("?","")
+  str = str.replaceAll(".","")
+  str = str.replaceAll(" ","")
+  console.log(str)
+  return str.toLowerCase() === reverse(str).toLowerCase();
 }
+
+const reverse = str => {
+  var splitString = str.split("");
+  var reverseArray = splitString.reverse(); 
+  return reverseArray.join("");
+};
+
+console.log(isPalindrome("Able, was I ere I saw Elba!"))
 
 module.exports = isPalindrome;

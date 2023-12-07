@@ -9,5 +9,12 @@ There is no automated test for this one, this is more for you to understand time
 */
 
 function calculateTime(n) {
-    return 0.01;
+    const startTime = new Date().getTime()
+    /*
+    Run function
+    */
+    setTimeout(() => console.log("Hello World"),1000);
+    return (new Date().getTime() - startTime)/1000;
 }
+let timeTaken = calculateTime(5);
+console.log("Running this function took :: " + timeTaken + " seconds")
