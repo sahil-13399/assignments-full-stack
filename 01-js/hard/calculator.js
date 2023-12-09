@@ -31,6 +31,9 @@ class Calculator {
     this.result *= num;
   }
   divide(num) {
+    if(num == 0) {
+      throw new Error()
+    }
     this.result /= num;
   }
   getResult() {
@@ -40,7 +43,10 @@ class Calculator {
     this.result = 0;
   }
   calculate(str) {
-    
+    if(str.indexOf("/ 0") != -1) {
+      throw new Error()
+    }
+    this.result = eval(str)
   }
 } 
 
