@@ -4,5 +4,18 @@
  */
 
 function sleep (seconds) {
-
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve()
+        }, seconds);
+    })
 }
+
+async function main(n) {
+    console.log("Waiting for " + n + " seconds");
+    await sleep(n);
+    console.log("Program over")
+}
+
+main(5000)
+//console.log("Outside of main");

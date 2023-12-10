@@ -22,15 +22,17 @@ const makePizza = (dough, callback) => {
     },2000);
 }
 
-const eatPizza = (data) => {
-    console.log(data);
-    console.log("Yummy Pizza");
+function main(callback) {
+    getCheese((cheese) => {
+        console.log(`I got my ${cheese}, now making dough`);
+        makeDough(cheese, (dough) => {
+            console.log(`I got my ${dough}, now making pizza`);
+            makePizza(dough, callback)
+        });
+    });
 }
 
-getCheese((cheese) => {
-    console.log(`I got my ${cheese}, now making dough`);
-    makeDough(cheese, (dough) => {
-        console.log(`I got my ${dough}, now making pizza`);
-        makePizza(dough, eatPizza)
-    });
-});
+main(data => {
+    console.log(data);
+    console.log("Yummy Pizza");
+})
