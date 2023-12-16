@@ -5,9 +5,9 @@
 function wait(n) {
     return new Promise(resolve => {
         setTimeout(() => {
-            resolve("I am done")
+            resolve()
         }, n);
     })
 }
 
-wait(10000).then(str => console.log(str));
+module.exports = wait

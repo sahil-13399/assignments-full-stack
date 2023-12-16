@@ -39,11 +39,99 @@
 
   Testing the server - run `npm run test-todoServer` command in terminal
  */
-  const express = require('express');
-  const bodyParser = require('body-parser');
-  
-  const app = express();
-  
-  app.use(bodyParser.json());
-  
-  module.exports = app;
+const express = require('express');
+const bodyParser = require('body-parser');
+const fs = require('fs/promises');
+
+const app = express();
+
+let todos = [];
+const dataFilePath = 'todosData.json';
+
+app.use(bodyParser.json());
+
+// Load data from file on server start
+const loadDataFromFile = async () => {
+  try {
+    const data = await fs.readFile(dataFilePath, 'utf8');
+    todos = JSON.parse(data);
+  } catch (error) {
+    // Ignore if the file doesn't exist or if there's an error reading it
+    console.error('Error loading data from file:', error.message);
+  }
+};
+
+// Save data to file after every modification
+const saveDataToFile = async () => {
+  try {
+    await fs.writeFile(dataFilePath, JSON.stringify(todos, null, 2));
+  } catch (error) {
+    console.error('Error saving data to file:', error.message);
+  }
+};
+
+// Load initial data from file
+loadDataFromFile();
+
+app.get("/todos", (req, res) => {
+  res.json(todos);
+});
+
+app.get("/todos/:id", (req, res) => {
+  const todo = todos.find(todo => todo.id === parseInt(req.params.id));
+  if (todo) {
+    res.json(todo);
+  } else {
+    res.status(404).json({ error: 'Todo not found' });
+  }
+});
+
+app.post("/todos", (req, res) => {
+  const { title, description } = req.body;
+  const newTodo = {
+    id: todos.length + 1,
+    title,
+    description,
+    completed: false,
+  };
+
+  todos.push(newTodo);
+  saveDataToFile(); // Save data to file after adding a new todo
+
+  res.status(201).json({ id: newTodo.id });
+});
+
+app.put("/todos/:id", (req, res) => {
+  const todoId = parseInt(req.params.id);
+  const updatedTodo = req.body;
+
+  const index = todos.findIndex(todo => todo.id === todoId);
+
+  if (index !== -1) {
+    todos[index] = { ...todos[index], ...updatedTodo };
+    saveDataToFile(); // Save data to file after updating a todo
+    res.json({ message: 'Todo updated successfully' });
+  } else {
+    res.status(404).json({ error: 'Todo not found' });
+  }
+});
+
+app.delete("/todos/:id", (req, res) => {
+  const todoId = parseInt(req.params.id);
+  const index = todos.findIndex(todo => todo.id === todoId);
+
+  if (index !== -1) {
+    todos.splice(index, 1);
+    saveDataToFile(); // Save data to file after deleting a todo
+    res.json({ message: 'Todo deleted successfully' });
+  } else {
+    res.status(404).json({ error: 'Todo not found' });
+  }
+});
+
+// Handle undefined routes
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+module.exports = app;
