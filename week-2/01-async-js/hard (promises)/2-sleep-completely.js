@@ -18,5 +18,5 @@ async function main(n) {
     console.log("Program over")
 }
 
-main(5000)
 //console.log("Outside of main");
+module.exports = sleep;
