@@ -28,15 +28,15 @@ router.post("/signin", async (req, res) => {
 router.post("/courses", adminMiddleware, async (req, res) => {
   // Implement course creation logic
   const course = req.body;
-  const savedCourse = await Course.create(course);
+  const savedCourse = await Course.create({...course, published : true});
   console.log(savedCourse);
   return res.status(200).json({ message: "Course created successfully", courseId : savedCourse });
 });
 
-router.get("/courses", adminMiddleware, (req, res) => {
+router.get("/courses", adminMiddleware, async (req, res) => {
 // Implement fetching all courses logic
-    const coursesList = Course.find({}).exec();
-    return coursesList;
+    const coursesList = await Course.find({}).exec();
+    return res.json(coursesList);
 });
 
 module.exports = router;
