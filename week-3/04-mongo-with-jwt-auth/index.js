@@ -9,6 +9,10 @@ app.use(bodyParser.json());
 app.use("/admin", adminRouter)
 app.use("/user", userRouter)
 
+app.get("/health", (req,res) => {
+    res.json({"message" : "Health check successful"})
+})
+
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
