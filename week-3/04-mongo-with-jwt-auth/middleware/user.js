@@ -7,6 +7,7 @@ function userMiddleware(req, res, next) {
     const {Authorization} = req.headers;
     const decoded = jwt.decode(Authorization, "secret");
     const result = User.exists({"username" : decoded.username});
+    req.headers.username = decoded.username;
     if(result == null) {
         return res.status(403).json({"error" : "Invalid User"});
     }
